@@ -52,9 +52,7 @@ bits_64 left_shift(bits_64 bits, int shift)
     for(int i = 0; i < shift; i++)
         bit_mask <<= 1;
     bit_mask -= 1;
-    bit_mask <<= (LENGTH_OF_INIT_KEY_SELECTION / 2 - shift);
-    tmp = bits & bit_mask;
-    tmp >>= (LENGTH_OF_INIT_KEY_SELECTION / 2 - shift);
+    tmp = (bits >> (LENGTH_OF_INIT_KEY_SELECTION / 2 - shift)) & bit_mask;
     bits <<= shift;
     bits |= tmp;
     bits &= 0xFFFFFFF;

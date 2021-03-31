@@ -12,7 +12,6 @@ bits_64 execute_16rounds(bits_64 init_permutated_plaintext, bits_64 *generated_k
         bits_64 expanded_right_half = expansion_permutation(right_half);
         bits_64 right_XOR_key = expanded_right_half ^ generated_keys[i];
         bits_64 after_S_box = s_box(right_XOR_key);
-        printf("%lx\n", after_S_box);
         bits_64 after_straight_permutation = straight_permutation(after_S_box);
         bits_64 left_XOR_func_r = left_half ^ after_straight_permutation;
         left_half = right_half;
