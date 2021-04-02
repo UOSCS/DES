@@ -7,10 +7,13 @@
 #define LENGTH_OF_STRAIGHT_PERMUTATION 32
 #define NUM_OF_S_BOX 8
 
-bits_64 initial_permutation(bits_64);
-bits_64 final_permutation(bits_64);
-bits_64 expansion_permutation(bits_64);
-bits_64 straight_permutation(bits_64);
+const int INIT_PERMUTATION[LENGTH_OF_INIT_PERMUTATION];
+const int FINAL_PERMUTATION[LENGTH_OF_FINAL_PERMUTATION];
+const int EXPANSION_PERMUTATION[LENGTH_OF_EXPANSION_PERMUTATION];
+const int STRAIGHT_PERMUTATION[LENGTH_OF_STRAIGHT_PERMUTATION];
+const int S_BOX[NUM_OF_S_BOX][64];
+
+bits_64 permutation(bits_64, int, const int [], int);
 bits_64 s_box(bits_64);
 bits_64 swap(bits_64, bits_64);
 

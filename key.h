@@ -5,9 +5,7 @@
 #define LENGTH_OF_KEY_COMPRESSION 48
 
 void key_generator(bits_64);
-bits_64 drop_parity_bits(bits_64);
 bits_64 left_shift(bits_64, int);
 bits_64 merge_left_right(bits_64, bits_64);
-bits_64 compress_key(bits_64);
 
 #endif

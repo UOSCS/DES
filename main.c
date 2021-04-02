@@ -13,9 +13,9 @@ int main(void)
     bits_64 ciphertext;
 
     key_generator(key);
-    init_permutated_plaintext = initial_permutation(plaintext);
+    init_permutated_plaintext = permutation(plaintext, LENGTH_OF_BIT, INIT_PERMUTATION, LENGTH_OF_INIT_PERMUTATION);
     after_16rounds = execute_16rounds(init_permutated_plaintext, generated_keys);
-    ciphertext = final_permutation(after_16rounds);
+    ciphertext = permutation(after_16rounds, LENGTH_OF_BIT, FINAL_PERMUTATION, LENGTH_OF_FINAL_PERMUTATION);
 
     printf("Cipher Text: %016lX\n", ciphertext);
 

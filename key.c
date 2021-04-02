@@ -1,4 +1,5 @@
 #include "common.h"
+#include "permutate.h"
 #include "key.h"
 
 const int INIT_KEY_SELECTION[] = {
@@ -24,7 +25,7 @@ const int ROUND[] = {
 
 void key_generator(bits_64 key)
 {
-    bits_64 original_key = drop_parity_bits(key);
+    bits_64 original_key = permutation(key, LENGTH_OF_BIT, INIT_KEY_SELECTION, LENGTH_OF_INIT_KEY_SELECTION);
     bits_64 merged_bits;
     bits_64 left_half = get_left_half(original_key, LENGTH_OF_INIT_KEY_SELECTION);
     bits_64 right_half = get_right_half(original_key, LENGTH_OF_INIT_KEY_SELECTION);
@@ -33,16 +34,8 @@ void key_generator(bits_64 key)
         left_half = left_shift(left_half, ROUND[i]);
         right_half = left_shift(right_half, ROUND[i]);
         merged_bits = merge_left_right(left_half, right_half);
-        generated_keys[i] = compress_key(merged_bits);
+        generated_keys[i] = permutation(merged_bits, LENGTH_OF_INIT_KEY_SELECTION, KEY_COMPRESSION, LENGTH_OF_KEY_COMPRESSION);
     }
-}
-
-bits_64 drop_parity_bits(bits_64 key)
-{
-    bits_64 original_key = 0;
-    for(int i = 0; i < LENGTH_OF_INIT_KEY_SELECTION; i++)
-        original_key |= ((key >> (LENGTH_OF_BIT - INIT_KEY_SELECTION[i])) & 1) << (LENGTH_OF_INIT_KEY_SELECTION - 1 - i);
-    return original_key;
 }
 
 bits_64 left_shift(bits_64 bits, int shift)
@@ -62,12 +55,4 @@ bits_64 left_shift(bits_64 bits, int shift)
 bits_64 merge_left_right(bits_64 left_half, bits_64 right_half)
 {
     return (left_half << (LENGTH_OF_INIT_KEY_SELECTION / 2)) | right_half;
-}
-
-bits_64 compress_key(bits_64 merged_bits)
-{
-    bits_64 generated_key = 0;
-    for(int i = 0; i < LENGTH_OF_KEY_COMPRESSION; i++)
-        generated_key |= ((merged_bits >> (LENGTH_OF_INIT_KEY_SELECTION - KEY_COMPRESSION[i])) & 1) << (LENGTH_OF_KEY_COMPRESSION - 1 - i);
-    return generated_key;
 }

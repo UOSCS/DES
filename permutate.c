@@ -1,7 +1,7 @@
 #include "common.h"
 #include "permutate.h"
 
-const int INIT_PERMUTATION[] = {
+const int INIT_PERMUTATION[LENGTH_OF_INIT_PERMUTATION] = {
     58, 50, 42, 34, 26, 18, 10,  2,
     60, 52, 44, 36, 28, 20, 12,  4,
     62, 54, 46, 38, 30, 22, 14,  6,
@@ -11,7 +11,7 @@ const int INIT_PERMUTATION[] = {
     61, 53, 45, 37, 29, 21, 13,  5,
     63, 55, 47, 39, 31, 23, 15,  7
 };
-const int FINAL_PERMUTATION[] = {
+const int FINAL_PERMUTATION[LENGTH_OF_FINAL_PERMUTATION] = {
     40,  8, 48, 16, 56, 24, 64, 32,
     39,  7, 47, 15, 55, 23, 63, 31,
     38,  6, 46, 14, 54, 22, 62, 30,
@@ -21,7 +21,7 @@ const int FINAL_PERMUTATION[] = {
     34,  2, 42, 10, 50, 18, 58, 26,
     33,  1, 41,  9, 49, 17, 57, 25
 };
-const int EXPANSION_PERMUTATION[] = {
+const int EXPANSION_PERMUTATION[LENGTH_OF_EXPANSION_PERMUTATION] = {
     32,  1,  2,  3,  4,  5,
     4,  5,  6,  7,  8,  9,
     8,  9, 10, 11, 12, 13,
@@ -31,13 +31,13 @@ const int EXPANSION_PERMUTATION[] = {
     24, 25, 26, 27, 28, 29,
     28, 29, 30, 31, 32, 01
 };
-const int STRAIGHT_PERMUTATION[] = {
+const int STRAIGHT_PERMUTATION[LENGTH_OF_STRAIGHT_PERMUTATION] = {
     16,  7, 20, 21, 29, 12, 28, 17,
     1, 15, 23, 26, 05, 18, 31, 10,
     2,  8, 24, 14, 32, 27,  3,  9,
     19, 13, 30,  6, 22, 11,  4, 25
 };
-const int S_BOX[8][64] =
+const int S_BOX[NUM_OF_S_BOX][64] =
 {
     {
         14,4,13,1,2,15,11,8,3,10,6,12,5,9,0,7,
@@ -89,29 +89,12 @@ const int S_BOX[8][64] =
     }
 };
 
-
-bits_64 initial_permutation(bits_64 plaintext)
+bits_64 permutation(bits_64 original, int length_of_original, const int permutation_table[], int length_of_table)
 {
-    bits_64 init_permutated_plaintext = 0;
-    for(int i = 0; i < LENGTH_OF_INIT_PERMUTATION; i++)
-        init_permutated_plaintext |= ((plaintext >> (LENGTH_OF_BIT - INIT_PERMUTATION[i])) & 1) << (LENGTH_OF_INIT_PERMUTATION - 1 - i);
-    return init_permutated_plaintext;
-}
-
-bits_64 final_permutation(bits_64 after_16rounds)
-{
-    bits_64 ciphertext = 0;
-    for(int i = 0; i < LENGTH_OF_FINAL_PERMUTATION; i++)
-        ciphertext |= ((after_16rounds >> (LENGTH_OF_BIT - FINAL_PERMUTATION[i])) & 1) << (LENGTH_OF_FINAL_PERMUTATION - 1 - i);
-    return ciphertext;
-}
-
-bits_64 expansion_permutation(bits_64 right_half)
-{
-    bits_64 expanded_right_half = 0;
-    for(int i = 0; i < LENGTH_OF_EXPANSION_PERMUTATION; i++)
-        expanded_right_half |= ((right_half >> (LENGTH_OF_BIT / 2 - EXPANSION_PERMUTATION[i])) & 1) << (LENGTH_OF_EXPANSION_PERMUTATION - 1 - i);
-    return expanded_right_half;
+    bits_64 permutated = 0;
+    for(int i = 0; i < length_of_table; i++)
+        permutated |= ((original >> (length_of_original - permutation_table[i])) & 1) << (length_of_table - 1 - i);
+    return permutated;
 }
 
 bits_64 s_box(bits_64 right_XOR_key)
@@ -127,14 +110,6 @@ bits_64 s_box(bits_64 right_XOR_key)
         bit_mask >>= 6;
     }
     return result;
-}
-
-bits_64 straight_permutation(bits_64 after_S_box)
-{
-    bits_64 after_straight_permutation = 0;
-    for(int i = 0; i < LENGTH_OF_STRAIGHT_PERMUTATION; i++)
-        after_straight_permutation |= ((after_S_box >> (LENGTH_OF_BIT / 2 - STRAIGHT_PERMUTATION[i])) & 1) << (LENGTH_OF_STRAIGHT_PERMUTATION - 1 - i);
-    return after_straight_permutation;
 }
 
 bits_64 swap(bits_64 left_half, bits_64 right_half)
